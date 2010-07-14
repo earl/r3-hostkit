@@ -43,8 +43,7 @@ to-cstr: either system/version/4 = 3 [
 			append out {"}
 			append out head data
 		]
-		remove head out
-		
+		head out
 	]
 ]
 
