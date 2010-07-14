@@ -4,10 +4,8 @@
 #--- You will need REBOL 2.6 or 2.7 in your work directory or environment path
 
 C= gcc 
-CFLAGS= -c -O1 -DUNICODE -I src/include/
+CFLAGS= -c -O1 -DUNICODE -DTO_WIN32 -I src/include/
 LIBS= lib/r3lib.lib -L c:/mingw/lib/ -lm -lwsock32 -lcomdlg32 -lgdi32 -lstdc++
-
-#-lc -lm -lstdc++
 
 S= src
 O= obj
