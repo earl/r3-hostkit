@@ -17,8 +17,14 @@
 
 
 #define HOST_LIB_VER 102
-#define HOST_LIB_SUM 5782
-#define HOST_LIB_SIZE 30
+#ifdef TO_WIN32
+	#define HOST_LIB_SUM 5782
+	#define HOST_LIB_SIZE 30
+#endif
+#ifdef TO_LINUX
+	#define HOST_LIB_SUM 59486
+	#define HOST_LIB_SIZE 32
+#endif
 
 
 typedef struct REBOL_Host_Lib {
@@ -36,6 +42,10 @@ typedef struct REBOL_Host_Lib {
 	REBCHR *(*os_list_env)(void);
 	void (*os_get_time)(REBOL_DAT *dat);
 	i64 (*os_delta_time)(i64 base, int flags);
+#ifdef TO_LINUX
+	REBCHR *(*os_to_rebol_path)(REBCHR *path, int *len);
+	REBCHR *(*os_to_local_path)(REBCHR *path, int *len);
+#endif
 	int (*os_get_current_dir)(REBCHR **path);
 	BOOL (*os_set_current_dir)(REBCHR *path);
 	void (*os_file_time)(REBREQ *file, REBOL_DAT *dat);
@@ -72,6 +82,10 @@ extern int OS_Set_Env(REBCHR *expr, int mode);    // host-lib.c
 extern REBCHR *OS_List_Env(void);    // host-lib.c
 extern void OS_Get_Time(REBOL_DAT *dat);    // host-lib.c
 extern i64 OS_Delta_Time(i64 base, int flags);    // host-lib.c
+#ifdef TO_LINUX
+extern REBCHR *OS_To_REBOL_Path(REBCHR *path, int *len);    // host-lib.c
+extern REBCHR *OS_To_Local_Path(REBCHR *path, int *len);    // host-lib.c
+#endif
 extern int OS_Get_Current_Dir(REBCHR **path);    // host-lib.c
 extern BOOL OS_Set_Current_Dir(REBCHR *path);    // host-lib.c
 extern void OS_File_Time(REBREQ *file, REBOL_DAT *dat);    // host-lib.c
@@ -110,6 +124,10 @@ REBOL_HOST_LIB Host_Lib_Init = {  // Host library function vector table.
 	OS_List_Env,
 	OS_Get_Time,
 	OS_Delta_Time,
+#ifdef TO_LINUX
+	OS_To_REBOL_Path,
+	OS_To_Local_Path,
+#endif
 	OS_Get_Current_Dir,
 	OS_Set_Current_Dir,
 	OS_File_Time,
@@ -150,6 +168,10 @@ extern	REBOL_HOST_LIB *Host_Lib;
 #define OS_LIST_ENV()               Host_Lib->os_list_env()
 #define OS_GET_TIME(a)              Host_Lib->os_get_time(a)
 #define OS_DELTA_TIME(a,b)          Host_Lib->os_delta_time(a,b)
+#ifdef TO_LINUX
+#define OS_TO_REBOL_PATH(a,b)       Host_Lib->os_to_rebol_path(a,b)
+#define OS_TO_LOCAL_PATH(a,b)       Host_Lib->os_to_local_path(a,b)
+#endif
 #define OS_GET_CURRENT_DIR(a)       Host_Lib->os_get_current_dir(a)
 #define OS_SET_CURRENT_DIR(a)       Host_Lib->os_set_current_dir(a)
 #define OS_FILE_TIME(a,b)           Host_Lib->os_file_time(a,b)
